@@ -79,7 +79,9 @@ those helps to answer problem questions
 ---
 
 checking if there missing months
+
 ![image.png](/screenshots/checking%20months%20and%20years%20count.png)
+
 **Query:** [checking months and years count](/sql/check%20missing%20months.sql)
 
 from cleaned data, I create the time-series we will use:
@@ -143,6 +145,7 @@ Compound Annual Growth Rate (CAGR) can indice to growth where :
 
 
 **Query** : [cagr.sql](sql/cagr.sql)
+
 ![Description of the image](/screenshots/cagr.png)
 
 CAGR = -3.25% means that complains fell by about 3.25% per year on average
@@ -229,5 +232,13 @@ the lead took by “Unknown” based on values of 2019, means there’re complai
 - Next questions would solve
 3. does the complaints repeat in a pattern like in weekend, or december ?
 4. why did complaints (grows/drops) <month>
+
+# Author
+---
+
+[SaraMie](https://github.com/SaraMie)
+[LinkedIn]([indexing_2019](/screenshots/indexing_chart_base_2019_issue_year.png))
+
+
 
 ****
