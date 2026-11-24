@@ -6,8 +6,7 @@
 
 1. Are the complaints grows yearly ? monthly ?
 2. Is one issue  growing faster than the others?
-3. does the complaints repeat in a pattern like in weekend, or december ?
-4. why did complaints (grows/drops) <month>
+
 
 # Key Insights
 
@@ -15,36 +14,20 @@
 
 ### Q1: Are complaints growing yearly? monthly?
 
-**Answer:** No. Complaints are not growing steadily: they peaked in 2018,
-halved by 2023, and have been flat at about 11k per month since 2024.
+**Answer:** No—overall complaints are not growing. Across the full window (2015–2025), the long-term trend fell by 27% with a CAGR of -3.25% per year, and 2025 (-3% YoY) points to leveling off around 133k rather than a new upward cycle.
 
-**Evidence:**
+At the monthly level, complaints are not growing steadily either; they follow a recurring seasonal cycle—peaking in August (+19k), October (+18k), and May (+17k), and dropping lowest in December (-38k) and January (-18k)—with notable irregular spikes ("leftovers") around 2016 and 2018.
 
-- Yearly: trend rose +36% (14.0k to 19.1k per month, 2016 to 2018),
-fell -53% to 8.9k in 2023, rebounded +26% in 2024, then plateaued.
-- Now: 11.1k per month, 42% below the 2018 peak, 25% above the 2023 low.
-- Monthly: [seasonal result: highest month, lowest month, size of swing].
-
-**Caveat:** 2026 is a partial year, and trend values at the series ends
-(2015, 2026) are less reliable because of the moving average.
 
 **So what:** Volume is not rising now. Investigate what caused the 2018
 spike and the 2021 to 2022 drop (policy, reporting, or product changes).
 
 ### Q2: Is one issue growing faster than the others?
 
-**Answer:** [Issue X] grew fastest ([+Y%]), while [Issue Z] is the largest
-but flat.
+**Answer:** Yes—the fastest-growing issue shifts depending on your starting baseline. From 2015 onward, "Unwanted calls" dominated both total volume and early growth (shaping the overall 2018 peak and 2023 dip), though its growth has since slowed. When re-indexed to 2019, "Unknown" is the fastest-growing category—climbing to 18.38% of YoY growth in 2020—while "Unwanted calls" has fallen relative to its 2019 level.
+**Caveat:**  "Unknown" may be missing labels
 
-**Evidence:**
-
-- Growth: [issue] [+% from year A to B], vs [+% total]
-- Share: [issue] went from [a%] to [b%] of total complaints
-- Contribution: [issue] explains [c%] of the total change
-
-**Caveat:** [e.g. tiny base, or "Unknown" may be missing labels]
-
-**So what:** [where to focus]
+**So what:** decompose the "Unwanted calls" and find pattern for those "Unknown" issues . Investigating those will narrow what the the exact issue we should deal with
 
 # Dataset used
 
@@ -90,98 +73,108 @@ the results at the new table `complaints_clean` that have only columns: ticket_i
 
 those helps to answer problem questions
 
-# Metrics: CAGR and YoY%
-
----
 
 # Method: Time-series and decomposition
 
 ---
+
+checking if there missing months
+![image.png](/screenshots/checking%20months%20and%20years%20count.png)
+**Query:** [checking months and years count](/sql/check%20missing%20months.sql)
 
 from cleaned data, I create the time-series we will use:
 
 - `ts_monthly_totals` , `ts_yearly_totals`  to analyse the yearly and monthly trends
 - `ts_monthly_issue`  to analyse trend per the issue
 
-**Query:** [/sql/creating time-series tables.sql](https://github.com/SaraMie/Time-series-analysis-with-CGB---Consumer-Complaints-Dataset/blob/main/sql/missing_days.sql) ****
+**Query:** [/sql/creating time-series tables.sql](/sql/creating%20time-series%20tables.sql) 
 
-### Plots :
-
-Total complaints per month
-
-[](https://app.notion.com)
-
-Total complaints per year
-
-[](https://app.notion.com)
-
-Issues per month
-
-[](https://app.notion.com)
 
 ## Decomposition
-
 ---
 
 I split monthly complaints into trend, seasonal and leftover parts using classical decomposition (2x12 moving average)
 
 **Reference:** Hyndman & Athanasopoulos, *Forecasting: Principles and Practice*, [https://otexts.com/fpp2/moving-averages.html](https://otexts.com/fpp2/moving-averages.html).
 
-## Getting trend value
 
-**Query:** [/sql/decomposation time-series.sql](https://github.com/SaraMie/Time-series-analysis-with-CGB---Consumer-Complaints-Dataset/blob/main/sql/decomposation) ****
+**Query:** [detereneded data table](/sql/trend%20data.sql) 
+>I used deterended data table to get components
 
-![image.png](image.png)
+**Query:** [components](/sql/ts_components.sql) 
 
-## Yearly trend
+## Trend
 
-![image.png](image%201.png)
+![trend](/screenshots/trend.png)
 
-**2015 to 2016 :** falling to about 14k complaints
-
-**2016 to 2017 :** rising from about 14k complaints to about 16k complaints
-
-**2017 to 2018 :** rising from about about 16k complaints to the peak overall about 19.1k complaints 
-
-**2018 to 2019 :** falling from about 19.1k complaints to about 16k complaints
-
-**2019 to 2020 :** continue falling from the 16k complaints to about 14k complaints
-
-**2020 to 2021 :** almost flat down : from 14.6k to 14.4k complaints
-
-**2021 to 2022 :** huge falling (about 4k complaints) from about 14k to 10k complaints
-
-**2022 to 2023 :** falling from about 10k complaints to 8.9k complaints
-
-**2023 to 2024 :** rising from about 8k complaints to about 11k complaints
-
-**2024 to 2025 :** flat up : from about 11.2k complaints to about 11.5k complaints
-
-**2025 to 2026 :** flat down : from about 11.5k complaints to about 11.1k complaints
-
-The main story here is Increased complaints in 2018, and the declining in 2023
-
-## Peaks of the Yearly Trend
-
-### 2018
-
-![image.png](image%202.png)
-
-The peak happen in June with about 19k
-
-### 2023
-
-![image.png](image%203.png)
-
-The dip occurs in May with about 8617
+Overall the trend fell 27% from 2015 to 2025
+As can be seen from the trend line chart, the trend changed in 4 phases: 
+up by 137k complaints in period 2015 to 2018 
+downward by 122k in period 2018 to 2023
+little up by 27k in a year 2024
+in the end go down by 62k complaints 
 
 ## Season
-
 ---
+
+![season](/screenshots/season.png)
+
+Complaints are higher always in August (19k), May (17k), October (18k) and lowest in January (-18k) and December(-38k)
 
 ## Leftovers
-
 ---
+
+![residual](/screenshots/residual.png)
+
+That line chart shows thaere're a lot of unusual values sprcially around 2016 and 2018
+
+
+
+# Metrics: CAGR and YoY%
+---
+
+## CAGR
+Compound Annual Growth Rate (CAGR) can indice to growth where :
+    cagr > 0 -> grew overall
+    cagr = 0 -> flat overall
+    cagr < 0 -> fell overall
+>formula: [(endingVal/startVal)^(1/n_years) ] - 1
+
+
+
+**Query** : [cagr.sql](sql/cagr.sql)
+![Description of the image](/screenshots/cagr.png)
+
+CAGR = -3.25% means that complains fell by about 3.25% per year on average
+
+>Note: CAGR just use ending and start values so doesn't tell   how the time serie is volative 
+
+## YoY% growth
+Year over Year growth percent express how a metric changed compared to a year ago :
+    yoy > 0 -> grew compared to last year
+    yoy = 0 -> flat - no change happened
+    yoy < 0 -> fell compared to last year
+>formula: (this year − last year) / last year × 100.
+
+**Query** : [yoy.sql](sql/yoy.sql)
+>I added the YoY percent as new column in `ts_yearly_total` 
+
+![Description of the image](/screenshots/yoy.png)
+
+The biggest grew was in 2024, 2017 and 2018. 
+looking to the 2024 values (from 105k to 137k) it actually went from the bottom overall
+in other side, 2017 was first grew and continue in 2018 to make max complaints overall
+
+The fell start after and it's obvious change (-18% yoy in 2019)
+2022 is big difference while complaints  go from 173k to 127k (46k fewer complaints)
+
+The big increases follow low points, so part of each peak is a rebound. 2025 (−3%) suggests complaints have levelled off at around 133k.
+
+![Description of the image](/screenshots/ts_yearly_line_chart.png)
+
+
+
+
 
 # Issues time series
 
@@ -191,7 +184,8 @@ monthly time-series of issues was spaghetti graph
 
 so for make it comparable I aggregate timeline to the years, and use Indexing chart where base date is start date which is here Jan 2015
 
-![image.png](image%204.png)
+**Query:** [indexing_chart](/sql/Indexing%20the%20yearly%20ts_issue.sql)
+![image.png](/screenshots/indexing_chart_base_2015_issue_year.png)
 
 > 
 > 
@@ -203,28 +197,37 @@ so for make it comparable I aggregate timeline to the years, and use Indexing ch
 
 ### YoY
 
-img: issue_share_in_yoy
-
-img: issue_share_in_yoy_legend
-
 ***check the pbi for better look***
+![issue_share_in_yoy](/screenshots/issue_share_in_yoy.png)
+![issue_share_in_yoy_legend](/screenshots/issue_share_in_yoy_legend.png)
 
-the bar chart is share of issue in the yoy, where we can locate that “Unwanted calls” that was 29% of yoy became 0.17%  of 2018 yoy, and we see in this year “Unknown” have biggest share (0.85%), as 2019 “Equipement” issue take 3.51% of yoy 
+
+As can be seen from this chart :
+- Growing of "Unwanted calls" complaints seems to vanishing , it grew by 33% in 2016. it kept grew but not much 
+May I the big grew of 2016 is recording the "Robocalls" and "Telemark" as "Unwanted calls" after october 2016 update
+- "Equipement" grew up appears in 2019 (3.89%) and keep in 2020 then just go almost flat
+- in 2018 "Unknown" leads the yoy with tiny percent (0.94%) but it go up in 2020 (18.38% from the yoy)
+
 
 ### Changing the base date to 2019 :
 
-[https://app.notion.com](https://app.notion.com)
+**Query:** [indexing_chart](/sql/Indexing%20the%20yearly%20ts_issue.sql)
+> Note: uncomment the command: `where YEAR(month) >=2019` comment for 2015 as base year
 
 the lead took by “Unknown” based on values of 2019, means there’re complaining growth in this issue from 2019
 
-“Unwanted Calls” falls too much comparing to its 2019 value but still in the lead, while the issues : “Availability”, “Phone”, “Closed Captioning over Internet” seems to go down during 2026
+“Unwanted Calls” falls too much comparing to its 2019 value but still in the lead
 
-img: top_5_indexing_2019
+![indexing_2019](/screenshots/indexing_chart_base_2019_issue_year.png)
 
-[https://app.notion.com](https://app.notion.com)
+
 
 # Limitations and next steps
 
 ---
+- The dataset I used had 2026 data but as it incompleted year I didn't include it.
+- Next questions would solve
+3. does the complaints repeat in a pattern like in weekend, or december ?
+4. why did complaints (grows/drops) <month>
 
 ****

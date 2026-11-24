@@ -1,24 +1,29 @@
 
-drop table if exists yoy_issue;
--- YoY calculation
-with ts_yearly_issue as (
+-- calculate CAGR
+-- = [ (endVal/startVal)^(1/nYears) ] - 1
+with bounds as (
 	select
-		issue_cleaned
-		, YEAR(month) year
-		, sum(total) year_total
-	from ts_monthly_issue_total
-	group by YEAR(month), issue_cleaned
+		MAX(year) as end_year
+		, MIN(year) as start_year
+		, MAX(year) - MIN(year) as n_years
+		
+	from ts_yearly_total
+	
+) ,
+calc as (
+	select
+	cast( 
+		100.0 * (
+			POWER(
+				CAST((select total from ts_yearly_total where year = end_year) as float)
+				/ (select total from ts_yearly_total where year = start_year)
+				,1.0 / (end_year - start_year)
+			) - 1 )
+		as decimal(10,2)
+	) as cagr_pct
+	from bounds
+
 )
 
-SELECT
-    issue_cleaned,
-    year,
-    year_total,
-    CAST((year_total * 1.0
-          / NULLIF(LAG(year_total) OVER (PARTITION BY issue_cleaned ORDER BY year), 0)
-          - 1) * 100 AS DECIMAL(10, 1)) AS yoy_pct
-into yoy_issue
-FROM ts_yearly_issue
-ORDER BY issue_cleaned, year;
-
+select cagr_pct from calc
 

@@ -27,7 +27,7 @@ INTO complaints_clean
 from complaints
 where 
     Date_of_Issue is null -- keeping the nulls
-    or YEAR(date_of_issue) between year('1/1/2015') and year('1/1/2026') -- exclude all dates out this period (badly they are impossible dates)
+    or YEAR(date_of_issue) between year('1/1/2015') and year('12/1/2025') -- exclude all dates out this period (badly they are impossible dates)
 
 
 

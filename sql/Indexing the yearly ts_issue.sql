@@ -7,7 +7,7 @@ with ts_yearly_issue as (
 		, YEAR(month) year
 		, sum(total) year_total
 	from ts_monthly_issue_total
-	where YEAR(month) >=2019 -- setting base date to 2019
+	--where YEAR(month) >=2019 -- setting base date to 2019
 	group by YEAR(month), issue_cleaned
 	
 )
